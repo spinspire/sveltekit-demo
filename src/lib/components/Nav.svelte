@@ -5,7 +5,7 @@
   const home = "/";
   const links = [
     ["Home", home],
-    ["About", "/about"],
+    ["About", "/about/"],
   ];
 </script>
 
