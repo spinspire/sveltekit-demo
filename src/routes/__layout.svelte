@@ -1,3 +1,8 @@
+<script>
+  import Nav from "$lib/components/Nav.svelte";
+</script>
+
+<Nav />
 <main class="container">
   <slot />
 </main>
