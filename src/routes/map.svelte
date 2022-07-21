@@ -29,11 +29,11 @@
 <script lang="ts">
   import Map from "$lib/components/Map.svelte";
   import type * as L from "leaflet";
-  export let center: L.LatLngExpression;
-  export let items: GeoItem[];
+  import { metadata } from "$lib/stores";
   let map: L.Map;
   let offset = 0;
 
+  $metadata.title = "Mapping Demo";
   async function searchHere() {
     center = map.getCenter();
     items = await doSearch(fetch, center, offset);

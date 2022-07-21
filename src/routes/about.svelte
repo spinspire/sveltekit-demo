@@ -2,7 +2,12 @@
   export const prerender = true;
 </script>
 
-<h1>About</h1>
+<script>
+  import { metadata } from "$lib/stores";
+
+  $metadata.title = "About Us";
+</script>
+
 <p>
   Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium adipisci id aperiam minima,
   inventore ipsam amet cumque. Iusto deleniti doloribus et tenetur iste suscipit dolorum autem
