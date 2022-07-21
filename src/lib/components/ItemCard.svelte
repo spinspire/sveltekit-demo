@@ -9,8 +9,12 @@
   {/if}
   <div class="d-flex flex-column p-2">
     <h6>{name}</h6>
-    <a href={`tel:${phone_number}`}>{phone_number}</a>
-    <a href={`mailto:${email}`}>{email}</a>
+    {#if phone_number}
+      <a href={`tel:${phone_number}`}>{phone_number}</a>
+    {/if}
+    {#if email}
+      <a href={`mailto:${email}`}>{email}</a>
+    {/if}
   </div>
 </div>
 
