@@ -21,7 +21,7 @@
   import { searchResults, center, zoom } from "$lib/geo";
   let map: L.Map;
 
-  $metadata.title = "Mapping Demo";
+  $metadata = { title: "Mapping with Leaflet" };
 
   function mapFitItems() {
     const { items } = $searchResults;

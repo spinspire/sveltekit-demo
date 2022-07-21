@@ -1,6 +1,7 @@
 ---
 title: About Us
 headline: About
+description: Tells you all the special features we demo in this app, and how we do it.
 ---
 
 <script>

@@ -1,14 +1,21 @@
 <script>
   import Nav from "$lib/components/Nav.svelte";
   import config from "$lib/config";
+  const {
+    site: { copy },
+  } = config;
   import { metadata } from "$lib/stores";
   import { beforeNavigate } from "$app/navigation";
+  import Author from "$lib/components/Author.svelte";
   // clear out the metadata before navigation
   beforeNavigate(() => ($metadata = { title: "" }));
 </script>
 
 <svelte:head>
   <title>{$metadata.title ? `${$metadata.title} | ${config.site.name}` : config.site.name}</title>
+  {#if $metadata.description}
+    <meta name="description" content={$metadata.description} />
+  {/if}
 </svelte:head>
 <header>
   <Nav />
@@ -21,7 +28,20 @@
 </main>
 <footer>
   <div class="bg-dark text-white">
-    <div class="container">Copyright &copy; 2022</div>
+    <div class="container">
+      <span>
+        Copyright &copy; {copy.year} <a href={copy.href} target="_blank">{copy.name}</a>.
+      </span>
+      <span class="d-none d-md-inline">
+        Source <a href={config.site.source} target="_blank">code</a>.
+      </span>
+      <span class="d-none d-md-inline">
+        Built with <a href="https://kit.svelte.dev" target="_blank">SvelteKit</a>.
+      </span>
+      <span>
+        <Author author={$metadata.author} />
+      </span>
+    </div>
   </div>
 </footer>
 
@@ -38,5 +58,12 @@
     background-color: var(--bs-white);
     flex-grow: 1;
     position: relative;
+  }
+  footer {
+    .container {
+      > span {
+        white-space: nowrap;
+      }
+    }
   }
 </style>
