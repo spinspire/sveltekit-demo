@@ -43,7 +43,6 @@
     map.on("locationfound", searchHere);
   }
   let container: HTMLElement;
-  $: console.log("parent", container);
 </script>
 
 <div class="mymap" bind:this={container}>
@@ -63,12 +62,17 @@
   {/if}
 </div>
 
-<style>
+<style lang="scss">
   :global(main) {
     display: flex;
     flex-direction: column;
   }
   .mymap {
     flex-grow: 1;
+  }
+  .input-group {
+    top: 0;
+    right: 0;
+    z-index: 401; // one more than .leaflet-pane
   }
 </style>

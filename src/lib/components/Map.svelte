@@ -42,18 +42,12 @@
   $: markers = rebuildMarkers(items);
 </script>
 
-<div class="slot">
-  <slot />
-</div>
+<!--
+  if you include a slot, by default it will be hidden behind the map.
+  So make sure you give it a z-index higher than .leaflet-pane's (400).
+-->
+<slot />
 
 <style lang="scss">
   @import "https://unpkg.com/leaflet@1.8.0/dist/leaflet.css";
-  .slot {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    z-index: 401; // one more than .leaflet-pane
-  }
 </style>
