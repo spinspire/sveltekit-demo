@@ -20,7 +20,7 @@ headline: About
 
 Here's an example of what amazing things you can do with Svelte and Svelte Kit.
 
-1. This page is written in [Markdown syntax](https://www.markdownguide.org/){target=\_blank}, not Svelte or HTML.
+1. This page is written in [Markdown syntax](https://www.markdownguide.org/), not Svelte or HTML. See [sources](https://raw.githubusercontent.com/spinspire/sveltekit-demo/master/src/routes/about.md).
 1. The filename is `about.md` yet it can mix Svelte code and Markdown.
 1. And thus, it can use Svelte code, and embed Svelte components.
 1. It can use Svelte Kit based layouts.
