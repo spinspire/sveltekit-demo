@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { LatLngExpression, Map } from "leaflet";
   import L from "leaflet?client";
-  import { onMount } from "svelte";
   import ItemCard from "$lib/components/ItemCard.svelte";
   import { mapTiles, type GeoItem } from "$lib/geo";
   import type { Marker } from "leaflet";
@@ -9,32 +8,24 @@
   export let center: LatLngExpression;
   export let zoom: number = 10;
   export let items: any[] = [];
-  export let map: Map;
-  let markers: L.Marker[] = [];
-  let elem: HTMLElement;
-
-  onMount(async () => {
-    map = L.map(elem, { center, zoom });
-    map.on("locationfound", (e) => {
-      e.latlng.lat;
+  export let container: HTMLElement;
+  export const map: Map = L.map(container, { center, zoom })
+    .addLayer(L.tileLayer(...mapTiles.openstreetmaps))
+    .on("locationfound", (e) => {
       L.circle(e.latlng, e.accuracy / 2, {
         weight: 2,
         color: "blue",
         fillColor: "blue",
         fillOpacity: 0.2,
       }).addTo(map);
-    });
-
-    if (!center) map.locate({ setView: true });
-    map.on("moveend", () => {
+    })
+    .on("moveend", () => {
       center = map.getCenter();
       zoom = map.getZoom();
     });
-    // L.control.locate().addTo(map);
-    L.tileLayer(...mapTiles.openstreetmaps).addTo(map);
-  });
+  if (!center) map.locate({ setView: true });
   let popup = true;
-  function createMarker(item: GeoItem) {
+  function createMarker(item: GeoItem): Marker {
     const { _geo, name } = item;
     const marker: Marker = L.marker(_geo, { title: name }).addTo(map);
     if (popup) {
@@ -44,26 +35,25 @@
     }
     return marker;
   }
-  function rebuildMarkers(items: GeoItem[]) {
-    markers.map((m) => map.removeLayer(m));
-    if (items.length > 1) {
-      const bounds = L.latLngBounds(items.map((i) => i._geo));
-      map.fitBounds(bounds);
-    }
+  function rebuildMarkers(items: GeoItem[]): Marker[] {
+    if (markers) markers.map((m) => map.removeLayer(m)); // clear existing
     return items.map(createMarker);
   }
-  // $: map && map.flyTo(center, zoom);
-  $: markers = map ? rebuildMarkers(items) : [];
+  $: markers = rebuildMarkers(items);
 </script>
 
-<div bind:this={elem} class="mymap" />
+<div class="slot">
+  <slot />
+</div>
 
-<style>
+<style lang="scss">
   @import "https://unpkg.com/leaflet@1.8.0/dist/leaflet.css";
-  .mymap {
+  .slot {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 100%;
+    right: 0;
+    left: 0;
+    z-index: 401; // one more than .leaflet-pane
   }
 </style>

@@ -1,4 +1,5 @@
-import type { LatLngExpression } from "leaflet";
+import type { LatLng, LatLngExpression } from "leaflet";
+import { writable, type Writable } from "svelte/store";
 
 export interface GeoItem {
   _geo: LatLngExpression;
@@ -21,6 +22,7 @@ export const mapTiles = {
     },
   ],
 };
+
 export async function getLocation(): Promise<GeolocationCoordinates> {
   return new Promise((resolve, reject) => {
     if (typeof navigator?.geolocation?.getCurrentPosition === "function") {
@@ -32,3 +34,14 @@ export async function getLocation(): Promise<GeolocationCoordinates> {
     }
   });
 }
+
+interface SearchResults {
+  items: GeoItem[];
+  zoom: number;
+  offset: number;
+  center?: LatLng;
+}
+
+export const searchResults = writable<SearchResults>({ items: [], zoom: 10, offset: 0 });
+export const center = writable<LatLng>();
+export const zoom = writable<number>();

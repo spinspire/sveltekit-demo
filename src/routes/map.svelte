@@ -1,6 +1,5 @@
 <script lang="ts" context="module">
   import { browser } from "$app/env";
-  import { getLocation, type GeoItem } from "$lib/geo";
 
   const BASE_URL = "https://ms-cp.office2.spinspire.com";
   async function doSearch(fetch: Function, center: L.LatLng, offset = 0, limit = 40) {
@@ -12,54 +11,64 @@
       return items;
     }
   }
-  export async function _load({ fetch }) {
-    if (browser) {
-      const { latitude: lat, longitude: lng } = await getLocation();
-      const items = await doSearch(fetch, { lat, lng });
-      return {
-        props: {
-          center: { lat, lng },
-          items,
-        },
-      };
-    }
-  }
 </script>
 
 <script lang="ts">
   import Map from "$lib/components/Map.svelte";
   import type * as L from "leaflet";
   import { metadata } from "$lib/stores";
+  import { latLngBounds } from "leaflet?client";
+  import { searchResults, center, zoom } from "$lib/geo";
   let map: L.Map;
-  let offset = 0;
 
   $metadata.title = "Mapping Demo";
+
+  function mapFitItems() {
+    const { items } = $searchResults;
+    if (items.length > 1) {
+      const bounds = latLngBounds(items.map((i) => i._geo));
+      map.fitBounds(bounds);
+    }
+  }
   async function searchHere() {
-    center = map.getCenter();
-    items = await doSearch(fetch, center, offset);
+    $searchResults.items = await doSearch(fetch, $center);
+    mapFitItems();
   }
   async function loadMore() {
-    offset = items.length;
-    const newitems = await doSearch(fetch, center, offset);
-    items = [...items, ...newitems];
+    const newitems = await doSearch(fetch, $center, $searchResults.items.length);
+    $searchResults.items = [...$searchResults.items, ...newitems];
+    mapFitItems();
   }
   $: if (map) {
     map.on("locationfound", searchHere);
   }
+  let container: HTMLElement;
+  $: console.log("parent", container);
 </script>
 
-<div class="input-group">
-  <button class="btn btn-primary" on:click={searchHere}>Search Here</button>
-  <button class="btn btn-secondary" on:click={loadMore}>Load More</button>
+<div class="mymap" bind:this={container}>
+  {#if browser && container}
+    <Map
+      bind:center={$center}
+      items={$searchResults.items}
+      bind:zoom={$zoom}
+      bind:map
+      bind:container
+    >
+      <div class="input-group justify-content-end p-2">
+        <button class="btn btn-primary" on:click={searchHere}>Search Here</button>
+        <button class="btn btn-secondary" on:click={loadMore}>Load More</button>
+      </div>
+    </Map>
+  {/if}
 </div>
 
-{#if browser}
-  <Map bind:center {items} bind:map />
-{/if}
-
 <style>
-  .input-group {
-    z-index: 1000;
-    margin: auto;
+  :global(main) {
+    display: flex;
+    flex-direction: column;
+  }
+  .mymap {
+    flex-grow: 1;
   }
 </style>
