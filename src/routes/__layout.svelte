@@ -33,6 +33,7 @@
         Copyright &copy; {copy.year} <a href={copy.href} target="_blank">{copy.name}</a>.
       </span>
       <span class="d-none d-md-inline">
+        <i class="bi bi-github" />
         Source <a href={config.site.source} target="_blank">code</a>.
       </span>
       <span class="d-none d-md-inline">
