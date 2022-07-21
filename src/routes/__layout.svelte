@@ -14,8 +14,8 @@
   <Nav />
 </header>
 <main class="container">
-  {#if $metadata.heading !== "" || $metadata.title}
-    <h1>{$metadata.heading || $metadata.title}</h1>
+  {#if $metadata.headline !== "" || $metadata.title}
+    <h1>{$metadata.headline || $metadata.title}</h1>
   {/if}
   <slot />
 </main>

@@ -2,7 +2,7 @@ import { writable } from "svelte/store";
 
 interface Metadata {
   title: string;
-  heading?: string;
+  headline?: string;
 }
 
 export const metadata = writable<Metadata>({ title: "" });
