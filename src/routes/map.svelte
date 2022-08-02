@@ -11,6 +11,11 @@
       return items;
     }
   }
+  export const load = async () => {
+    return {
+      stuff: { main_class: undefined }, // override default
+    };
+  };
 </script>
 
 <script lang="ts">

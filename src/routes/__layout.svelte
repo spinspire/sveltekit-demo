@@ -1,3 +1,14 @@
+<script context="module">
+  export async function load() {
+    return {
+      // default stuff
+      stuff: {
+        main_class: "container",
+      },
+    };
+  }
+</script>
+
 <script>
   import Nav from "$lib/components/Nav.svelte";
   import config from "$lib/config";
@@ -7,6 +18,7 @@
   import { metadata } from "$lib/stores";
   import { beforeNavigate } from "$app/navigation";
   import Author from "$lib/components/Author.svelte";
+  import { page } from "$app/stores";
   // clear out the metadata before navigation
   beforeNavigate(() => ($metadata = { title: "" }));
 </script>
@@ -20,7 +32,7 @@
 <header>
   <Nav />
 </header>
-<main class="container">
+<main class={$page.stuff.main_class}>
   {#if $metadata.headline !== "" || $metadata.title}
     <h1>{$metadata.headline || $metadata.title}</h1>
   {/if}
@@ -50,14 +62,14 @@
   :global(body) {
     background-color: var(--bs-light);
     > :global(div) {
-      min-height: 100vh;
+      min-height: 100vh; // fill out the page height
       display: flex;
       flex-direction: column;
     }
   }
   main {
     background-color: var(--bs-white);
-    flex-grow: 1;
+    flex-grow: 1; // occupy all available height
     position: relative;
   }
   footer {
