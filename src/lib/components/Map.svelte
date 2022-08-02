@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { LatLngExpression, Map } from "leaflet";
   import L from "leaflet?client";
+  import "leaflet.locatecontrol?client";
+  import "leaflet.locatecontrol/dist/L.Control.Locate.css";
+  import "leaflet/dist/leaflet.css";
   import ItemCard from "$lib/components/ItemCard.svelte";
   import { mapTiles, type GeoItem } from "$lib/geo";
   import type { Marker } from "leaflet";
@@ -11,18 +14,15 @@
   export let container: HTMLElement;
   export const map: Map = L.map(container, { center, zoom })
     .addLayer(L.tileLayer(...mapTiles.openstreetmaps))
-    .on("locationfound", (e) => {
-      L.circle(e.latlng, e.accuracy / 2, {
-        weight: 2,
-        color: "blue",
-        fillColor: "blue",
-        fillOpacity: 0.2,
-      }).addTo(map);
-    })
     .on("moveend", () => {
       center = map.getCenter();
       zoom = map.getZoom();
     });
+  const locateOptions = {
+    flyTo: true,
+    returnToPrevBounds: true,
+  };
+  L.control.locate(locateOptions).addTo(map);
   if (!center) map.locate({ setView: true });
   let popup = true;
   function createMarker(item: GeoItem): Marker {
@@ -47,7 +47,3 @@
   So make sure you give it a z-index higher than .leaflet-pane's (400).
 -->
 <slot />
-
-<style lang="scss">
-  @import "https://unpkg.com/leaflet@1.8.0/dist/leaflet.css";
-</style>

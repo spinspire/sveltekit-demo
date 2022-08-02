@@ -34,6 +34,7 @@
   },
   "type": "module",
   "dependencies": {
-    "leaflet": "^1.8.0"
+    "leaflet": "^1.8.0",
+    "leaflet.locatecontrol": "^0.76.1"
   }
 }
