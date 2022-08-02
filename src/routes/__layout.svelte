@@ -15,26 +15,23 @@
   const {
     site: { copy },
   } = config;
-  import { metadata } from "$lib/stores";
-  import { beforeNavigate } from "$app/navigation";
   import Author from "$lib/components/Author.svelte";
   import { page } from "$app/stores";
-  // clear out the metadata before navigation
-  beforeNavigate(() => ($metadata = { title: "" }));
+  $: metadata = $page.stuff.metadata || {};
 </script>
 
 <svelte:head>
-  <title>{$metadata.title ? `${$metadata.title} | ${config.site.name}` : config.site.name}</title>
-  {#if $metadata.description}
-    <meta name="description" content={$metadata.description} />
+  <title>{metadata.title ? `${metadata.title} | ${config.site.name}` : config.site.name}</title>
+  {#if metadata.description}
+    <meta name="description" content={metadata.description} />
   {/if}
 </svelte:head>
 <header>
   <Nav />
 </header>
 <main class={$page.stuff.main_class}>
-  {#if $metadata.headline !== "" || $metadata.title}
-    <h1>{$metadata.headline || $metadata.title}</h1>
+  {#if metadata.headline !== "" && metadata.title}
+    <h1>{metadata.headline || metadata.title}</h1>
   {/if}
   <slot />
 </main>
@@ -52,7 +49,7 @@
         Built with <a href="https://kit.svelte.dev" target="_blank">SvelteKit</a>.
       </span>
       <span>
-        <Author author={$metadata.author} />
+        <Author author={metadata.author} />
       </span>
     </div>
   </div>

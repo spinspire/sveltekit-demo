@@ -1,6 +1,4 @@
 <script lang="ts" context="module">
-  import { browser } from "$app/env";
-
   const BASE_URL = "https://ms-cp.office2.spinspire.com";
   async function doSearch(fetch: Function, center: L.LatLng, offset = 0, limit = 40) {
     const { lat, lng } = center;
@@ -11,22 +9,27 @@
       return items;
     }
   }
-  export const load = async () => {
+
+  export async function load() {
     return {
-      stuff: { main_class: undefined }, // override default
+      stuff: {
+        main_class: undefined, // override default
+        metadata: {
+          title: "Mapping with Leaflet",
+          headline: "",
+        },
+      },
     };
-  };
+  }
 </script>
 
 <script lang="ts">
+  import { browser } from "$app/env";
   import Map from "$lib/components/Map.svelte";
   import type * as L from "leaflet";
-  import { metadata } from "$lib/stores";
   import { latLngBounds } from "leaflet?client";
   import { searchResults, center, zoom } from "$lib/geo";
   let map: L.Map;
-
-  $metadata = { title: "Mapping with Leaflet" };
 
   function mapFitItems() {
     const { items } = $searchResults;

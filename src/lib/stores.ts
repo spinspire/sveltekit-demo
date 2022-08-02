@@ -8,4 +8,5 @@ interface Metadata {
   author?: string;
 }
 
+// TODO: remove (unused)
 export const metadata = writable<Metadata>({ title: "" });
