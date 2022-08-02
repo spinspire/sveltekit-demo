@@ -12,22 +12,29 @@
   export let zoom: number = 10;
   export let items: any[] = [];
   export let container: HTMLElement;
-  export const map: Map = L.map(container, { center, zoom })
-    .addLayer(L.tileLayer(...mapTiles.openstreetmaps))
-    .on("moveend", () => {
-      center = map.getCenter();
-      zoom = map.getZoom();
-    });
+  const osm = L.tileLayer(...mapTiles.openstreetmaps);
+  const markers = L.layerGroup();
+  export const map: Map = L.map(container, {
+    center,
+    zoom,
+    layers: [osm, markers],
+  }).on("moveend", () => {
+    center = map.getCenter();
+    zoom = map.getZoom();
+  });
   const locateOptions = {
     flyTo: true,
     returnToPrevBounds: true,
   };
   L.control.locate(locateOptions).addTo(map);
+  const baseLayers = { OpenStreetMap: osm };
+  const overlays = { Markers: markers };
+  L.control.layers(baseLayers, overlays, { position: "topleft" }).addTo(map);
   if (!center) map.locate({ setView: true });
   let popup = true;
   function createMarker(item: GeoItem): Marker {
     const { _geo, name } = item;
-    const marker: Marker = L.marker(_geo, { title: name }).addTo(map);
+    const marker: Marker = L.marker(_geo, { title: name });
     if (popup) {
       const target = document.createElement("DIV");
       new ItemCard({ target, props: { item } });
@@ -35,11 +42,14 @@
     }
     return marker;
   }
-  function rebuildMarkers(items: GeoItem[]): Marker[] {
-    if (markers) markers.map((m) => map.removeLayer(m)); // clear existing
-    return items.map(createMarker);
+  function rebuildMarkers(items: GeoItem[]) {
+    markers.getLayers().map((l) => l.remove()); // clear existing
+    items.map(createMarker).map((m) => m.addTo(markers));
+    if (items.length > 1) {
+      map.fitBounds(items.map((i) => i._geo));
+    }
   }
-  $: markers = rebuildMarkers(items);
+  $: rebuildMarkers(items);
 </script>
 
 <!--

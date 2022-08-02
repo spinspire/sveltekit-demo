@@ -27,28 +27,18 @@
   import { browser } from "$app/env";
   import Map from "$lib/components/Map.svelte";
   import type * as L from "leaflet";
-  import { latLngBounds } from "leaflet?client";
   import { searchResults, center, zoom } from "$lib/geo";
   let map: L.Map;
 
-  function mapFitItems() {
-    const { items } = $searchResults;
-    if (items.length > 1) {
-      const bounds = latLngBounds(items.map((i) => i._geo));
-      map.fitBounds(bounds);
-    }
-  }
   async function searchHere() {
     $searchResults.items = await doSearch(fetch, $center);
-    mapFitItems();
   }
   async function loadMore() {
     const newitems = await doSearch(fetch, $center, $searchResults.items.length);
     $searchResults.items = [...$searchResults.items, ...newitems];
-    mapFitItems();
   }
   $: if (map) {
-    map.on("locationfound", searchHere);
+    map.once("locationfound", searchHere);
   }
   let container: HTMLElement;
 </script>
