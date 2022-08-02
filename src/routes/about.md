@@ -8,13 +8,17 @@ description: Tells you all the special features we demo in this app, and how we 
   import Map from "$lib/components/Map.svelte";
   import { browser } from "$app/env";
   let container;
+  const center = {
+    lat: 30.333448105164372,
+    lng:-81.59435400737976,
+  };
   const items = [
     {
       name: "SpinSpire",
       phone_number: "904-638-2918",
       email: "info@spinspire.com",
       image_url: "https://spinspire.com/sites/spinspire.com/themes/spinspire_foundation/images/logo-05.png",
-      _geo: {lat: 30.333359, lng: -81.5965467},
+      _geo: center,
     },
   ];
 </script>
@@ -30,7 +34,7 @@ Below is a Svelte component plopped right in the middle of Markdown content.
 
 <div bind:this={container} class="mymap">
   {#if browser && container}
-    <Map container={container} items={items}/>
+    <Map container={container} items={items} center={center} zoom={15} />
   {/if}
 </div>
 
@@ -39,9 +43,6 @@ And here's more Markdown.
 The above map was embedded using following code ... (And yes, `code syntax highlighting` is automatic!)
 
 ```svelte
----
-front: matter
----
 <script>
 import Map from "$lib/components/Map.svelte";
 </script>
