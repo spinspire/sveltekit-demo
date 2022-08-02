@@ -7,6 +7,10 @@
   import ItemCard from "$lib/components/ItemCard.svelte";
   import { mapTiles, type GeoItem } from "$lib/geo";
   import type { Marker } from "leaflet";
+  import iconUrl from "leaflet/dist/images/marker-icon.png";
+  import shadowUrl from "leaflet/dist/images/marker-shadow.png";
+  // have to do this otherwise the icons don't get included in build
+  const icon = L.icon({ iconUrl, shadowUrl });
 
   export let center: LatLngExpression;
   export let zoom: number = 10;
@@ -34,7 +38,7 @@
   let popup = true;
   function createMarker(item: GeoItem): Marker {
     const { _geo, name } = item;
-    const marker: Marker = L.marker(_geo, { title: name });
+    const marker: Marker = L.marker(_geo, { title: name, icon });
     if (popup) {
       const target = document.createElement("DIV");
       new ItemCard({ target, props: { item } });
